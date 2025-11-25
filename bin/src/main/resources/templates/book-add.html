@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add New Book</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url('https://img.freepik.com/premium-photo/book-library-with-old-open-textbook-stack-piles-literature-text-archive-reading-desk_779468-5822.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-attachment: fixed;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .form-container {
+            max-width: 500px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-label {
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background-color: #1976d2;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #1565c0;
+        }
+
+        h4 {
+            font-weight: bold;
+            text-align: center;
+            color: #333;
+            margin-bottom: 25px;
+        }
+
+        .modal-content {
+            border-radius: 10px;
+        }
+
+        .modal-header {
+            background-color: #007bff;
+            color: white;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="form-container">
+        <h4>Add New Book</h4>
+
+        <!-- Success or Error Message -->
+        <div th:if="${message}" class="alert alert-info" th:text="${message}"></div>
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+        <form th:action="@{/admin-dashboard/books/add}" th:object="${book}" method="post">
+            <div class="mb-3">
+                <label class="form-label">Title</label>
+                <input type="text" th:field="*{title}" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Author</label>
+                <input type="text" th:field="*{author}" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Genre</label>
+                <input type="text" th:field="*{genre}" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">ISBN (10 digits)</label>
+                <input type="text" th:field="*{isbn}" class="form-control" pattern="\d{10}" required>
+                <div class="form-text text-danger" th:if="${#fields.hasErrors('isbn')}" th:errors="*{isbn}">Invalid ISBN</div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Year Published</label>
+                <input type="number" th:field="*{yearPublished}" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Available Copies</label>
+                <input type="number" th:field="*{availableCopies}" class="form-control" min="0" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Add Book</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

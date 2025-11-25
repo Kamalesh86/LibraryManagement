@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Borrowing Transactions</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url("/borrow.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            min-height: 100vh;
+        }
+
+        .table {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <h2 class="mb-4 text-center text-blue">
+        <span class="badge bg-info text-dark">Borrowing Transactions</span>
+    </h2>
+
+    <table class="table table-bordered table-hover shadow-sm">
+        <thead class="table-dark">
+        <tr>
+            <th>Transaction ID</th>
+            <th>Book ID</th>
+            <th>Member ID</th>
+            <th>Borrow Date</th>
+            <th>Return Date</th>
+            <th>Return Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="transaction : ${transactions}">
+            <td th:text="${transaction.transactionId}">1</td>
+            <td th:text="${transaction.book.bookId}">101</td>
+            <td th:text="${transaction.member.memberId}">1</td>
+            <td th:text="${transaction.borrowDate}">2025-04-01</td>
+            <td th:text="${transaction.returnDate != null ? transaction.returnDate : 'Not Returned'}">2025-04-15</td>
+            <td th:text="${transaction.status}">Returned</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

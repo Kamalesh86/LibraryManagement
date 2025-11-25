@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Book Management</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
+    <style>
+        body {
+            background-image: url("https://images.unsplash.com/photo-1521587765099-ef196772841e");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .container {
+            background: rgba(255,255,255,0.95);
+            margin-top: 50px;
+            padding: 30px;
+            border-radius: 10px;
+        }
+        h2 {
+            color: #007bff;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+        .copies-control {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .copies-control form {
+            display: inline;
+        }
+        .badge {
+            font-size: 1rem;
+        }
+        .back-btn {
+          margin-top: 20px;
+          padding: 10px 20px;
+          border-radius: 8px;
+          background-color: #007bff;
+          border: none;
+          color: white;
+          font-weight: 600;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+        }
+        .back-btn:hover {
+          background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+    <span th:text="${successMessage}"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+<div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+    <span th:text="${errorMessage}"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+<div class="container">
+    <h2 class="text-center">Book Management <span class="badge bg-primary float-end">Admin Panel</span></h2>
+
+    <div th:if="${message}" class="alert alert-success text-center" th:text="${message}"></div>
+
+    <table class="table table-bordered table-hover">
+        <thead class="table-dark text-center">
+        <tr>
+            <th>Book ID</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Available Copies</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="book : ${books}">
+            <td th:text="${book.bookId}"></td>
+            <td th:text="${book.title}"></td>
+            <td th:text="${book.author}"></td>
+            <td class="text-center">
+                <div class="copies-control">
+                    <form th:action="@{'/admin-dashboard/books/' + ${book.bookId} + '/copies/increment'}" method="post">
+                        <button class="btn btn-success btn-sm">+</button>
+                    </form>
+                    <span class="mx-2 font-weight-bold" th:text="${book.availableCopies}"></span>
+                    <form th:action="@{'/admin-dashboard/books/' + ${book.bookId} + '/copies/decrement'}" method="post">
+                        <button class="btn btn-warning btn-sm" th:disabled="${book.availableCopies == 0}">-</button>
+                    </form>
+                </div>
+            </td>
+            <td class="text-center">
+                <form th:action="@{'/admin-dashboard/books/delete/' + ${book.bookId}}" method="get" onsubmit="return confirm('Are you sure you want to delete this book?');">
+                    <button class="btn btn-danger btn-sm">Delete</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="text-center mt-3">
+        <a href="/admin-dashboard/books/add" class="btn btn-primary">Add New Book</a>
+    </div>
+
+    <button class="back-btn" th:onclick="|window.location.href='@{/admin-dashboard}'|">← Back to Dashboard</button>
+</div>
+</body>
+</html>

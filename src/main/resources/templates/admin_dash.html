@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Library Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <style>
+        body {
+          background: url('https://images.unsplash.com/photo-1587614203976-365c74645e83?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
+          background-size: cover;
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          color: #fff;
+        }
+
+        .dashboard {
+          display: flex;
+          min-height: 100vh;
+          padding: 40px;
+        }
+
+        .stats-column {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 25px;
+        }
+
+        .stats-card {
+          width: 130px;
+          height: 130px;
+          border-radius: 50%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          font-weight: bold;
+          background-color: rgba(0, 0, 0, 0.6);
+          border: 5px solid white;
+        }
+
+        .nav-column {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 25px;
+        }
+
+        .nav-btn {
+          width: 300px;
+          padding: 15px 25px;
+          font-size: 1.2rem;
+          font-weight: 600;
+          border-radius: 10px;
+          background-color: rgba(255, 255, 255, 0.8);
+          color: #000;
+          border: none;
+          transition: all 0.3s ease;
+          text-align: center;
+          cursor: pointer;
+        }
+
+        .nav-btn:hover {
+          background-color: #007bff;
+          color: white;
+          transform: scale(1.05);
+        }
+
+        h1 {
+          position: absolute;
+          top: 20px;
+          left: 50%;
+          transform: translateX(-50%);
+          font-size: 2.5rem;
+          font-weight: bold;
+          color: white;
+          text-shadow: 2px 2px 4px #000;
+        }
+
+        @media (max-width: 768px) {
+          .dashboard {
+            flex-direction: column;
+            align-items: center;
+          }
+
+          .nav-btn {
+            width: 80%;
+          }
+
+          .stats-column {
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+          }
+        }
+    </style>
+</head>
+<body>
+
+<h1>Library Admin Dashboard</h1>
+
+<div class="dashboard">
+    <!-- Stat Circles -->
+    <div class="stats-column">
+        <div class="stats-card">Members<br><span th:text="${membersCount}">0</span></div>
+        <div class="stats-card">Borrowed<br><span th:text="${borrowedCount}">0</span></div>
+        <div class="stats-card">Books<br><span th:text="${booksCount}">0</span></div>
+        <div class="stats-card">Returned<br><span th:text="${returnedCount}">0</span></div>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div class="nav-column">
+        <a class="nav-btn" th:href="@{/admin-dashboard/books}">📚 Manage Books</a>
+        <a class="nav-btn" th:href="@{/admin-dashboard/members}">👤 Manage Members</a>
+        <a class="nav-btn" th:href="@{/admin-dashboard/transactions}">🔁 Manage Borrowing & Returns</a>
+        <a class="nav-btn" th:href="@{/admin-dashboard/profile}">👨‍💼 View Profile</a>
+        <a class="nav-btn" th:href="@{/logout}">Logout</a>
+    </div>
+</div>
+
+</body>
+</html>

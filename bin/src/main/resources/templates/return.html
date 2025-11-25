@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Return a Book</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        /* Same CSS as your original */
+        body {
+          background-image: url('https://images.unsplash.com/photo-1512820790803-83ca734da794');
+          background-size: cover;
+          background-position: center;
+          font-family: 'Segoe UI', sans-serif;
+          min-height: 100vh;
+        }
+        .form-container {
+          background-color: rgba(255,255,255,0.95);
+          padding: 30px;
+          border-radius: 12px;
+          max-width: 700px;
+          margin: 5% auto;
+          box-shadow: 0 0 15px rgba(0,0,0,0.3);
+          color: #333;
+        }
+        h2 {
+          text-align: center;
+          font-weight: bold;
+          color: #007bff;
+          margin-bottom: 30px;
+        }
+        .back-btn {
+          margin-top: 20px;
+          padding: 10px 20px;
+          border-radius: 8px;
+          background-color: #007bff;
+          border: none;
+          color: white;
+          font-weight: 600;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+        }
+        .back-btn:hover {
+          background-color: #0056b3;
+        }
+        /* ...rest of your CSS... */
+    </style>
+</head>
+<body>
+<section class="container">
+    <div class="form-container">
+        <h2>Return a Book</h2>
+        <!-- Search Form -->
+        <form th:action="@{/dashboard/return}" method="post">
+            <div class="mb-3">
+                <label for="memberId" class="form-label">Your Member ID</label>
+                <input
+                        type="text"
+                        id="memberId"
+                        name="memberId"
+                        placeholder="Enter your Member ID"
+                        class="form-control"
+                        required
+                        th:value="${memberId != null ? memberId : ''}"
+                />
+            </div>
+            <div class="text-center mb-3">
+                <button type="submit" class="btn btn-primary">Show Borrowed Books</button>
+            </div>
+        </form>
+
+        <!-- Alerts for success/error -->
+        <div th:if="${returnSuccess}" class="alert alert-success" th:text="${returnSuccess}"></div>
+        <div th:if="${returnError}" class="alert alert-danger" th:text="${returnError}"></div>
+
+        <!-- Borrowed Books Display -->
+        <div th:if="${borrowedBooks != null}" class="mt-4">
+            <h4>Currently Borrowed Books:</h4>
+
+            <div th:if="${noBooks}" class="alert alert-info">
+                No books currently borrowed by this member.
+            </div>
+
+            <table class="table table-striped table-hover" th:if="${!noBooks}">
+                <thead>
+                <tr>
+                    <th>Book Title</th>
+                    <th>Borrow Date</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="transaction : ${borrowedBooks}">
+                    <td th:text="${transaction.book.title}">Book Title</td>
+                    <td th:text="${#temporals.format(transaction.borrowDate, 'yyyy-MM-dd')}">Borrow Date</td>
+                    <td th:text="${#temporals.format(transaction.dueDate, 'yyyy-MM-dd')}">Due Date</td>
+                    <td th:classappend="${transaction.overdue} ? 'text-danger' : 'text-success'">
+                        <span th:text="${transaction.overdue} ? ${'OVERDUE (' + transaction.overdueDays + ' days)'} : ${transaction.status}"></span>
+                    </td>
+                    <td>
+                        <form th:if="${!transaction.overdue}" th:action="@{/dashboard/return/{id}(id=${transaction.transactionId})}" method="post" style="display:inline-block;">
+                            <input type="hidden" name="memberId" th:value="${memberId}" />
+                            <button type="submit" class="btn btn-primary btn-sm"
+                                    th:disabled="${transaction.status != 'BORROWED'}">Return</button>
+                        </form>
+                        <form th:if="${transaction.overdue}" th:action="@{/dashboard/return/pay-fine}" method="get" style="display:inline-block;">
+                            <input type="hidden" name="memberId" th:value="${memberId}" />
+                            <input type="hidden" name="transactionId" th:value="${transaction.transactionId}" />
+                            <button type="submit" class="btn btn-warning btn-sm">Pay Fine and Return</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <button class="back-btn" th:onclick="|window.location.href='@{/dashboard}'|">← Back to Dashboard</button>
+
+    </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

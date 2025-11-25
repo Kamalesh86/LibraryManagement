@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Notifications</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        body {
+            background: linear-gradient(to right, #141e30, #243b55);
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .notification-card {
+            background: #1e293b;
+            border-left: 6px solid #1e90ff;
+            border-radius: 12px;
+            box-shadow: 0 0 15px #1e90ff44;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.2rem;
+            transition: transform 0.2s ease;
+        }
+
+        .notification-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 25px #1e90ffaa;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            font-size: 1rem;
+            color: #aad4ff;
+        }
+
+        .notification-desc {
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+
+        .notification-time {
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+
+        .btn-primary {
+            background-color: #1e90ff;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #63b3ed;
+        }
+
+        .back-btn {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body class="container mt-4">
+
+<h2 class="mb-4 text-center">Notifications</h2>
+
+<div th:if="${notifications.isEmpty()}">
+    <p class="text-center">No notifications yet.</p>
+</div>
+
+<div th:each="note : ${notifications}" class="notification-card"
+     th:classappend="${!note.isRead} ? 'border-warning'">
+    <div>
+<!--        <div class="notification-title" th:text="${note.type}">[TYPE]</div>-->
+        <div class="notification-desc" th:text="${note.message}">[MESSAGE]</div>
+        <div class="notification-time" th:text="${#temporals.format(note.dateSent, 'dd MMM yyyy hh:mm a')}">[TIME]</div>
+        <form th:action="@{/dashboard/notifications/mark-read}" method="post" class="mt-2">
+            <input type="hidden" name="notificationId" th:value="${note.notificationId}" />
+            <button type="submit" class="btn btn-sm btn-primary" th:if="${!note.isRead}">Mark as Read</button>
+        </form>
+    </div>
+</div>
+
+<button class="btn btn-outline-info back-btn" th:onclick="|window.location.href='@{/dashboard}'|">Back to Dashboard</button>
+
+</body>
+</html>
